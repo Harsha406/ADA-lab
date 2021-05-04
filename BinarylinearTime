@@ -1,0 +1,110 @@
+#include <iostream>
+using namespace std;
+#include <time.h>
+#include <stdlib.h>
+class search
+{
+
+public:
+    int n, a[1000], ele, pos = 0;
+    void getdata();
+    void display();
+    void sort();
+    int linearsearch(int index);
+    int binarysearch(int beg, int end);
+};
+
+void search::getdata()
+{
+    cout << "Enter the number of elements that you want to store:" << endl;
+    cin >> n;
+    cout << "Entered " << n << " random elements into the array:" << endl;
+    for (int i = 0; i < n; i++)
+    {
+         a[i] = random() % 1000;
+    }
+     for (int i = 0; i < n; i++)
+        cout << a[i] << " ";
+    cout << endl;
+    cout << "Enter the element to be searched:" << endl;
+    cin >> ele;
+}
+
+void search::display()
+{
+    if (pos > 0)
+        cout << "The element " << ele << " is present at position " << pos << endl;
+    else
+        cout << "Element not found" << endl;
+}
+
+int search::linearsearch(int index)
+{
+    if (index >= n)
+    {
+        return 0;
+    }
+
+    else if (a[index] == ele)
+    {
+        pos = index+1;
+        return pos;
+    }
+
+    else
+    {
+        return linearsearch(index + 1);
+    }
+}
+int search::binarysearch(int beg, int end)
+{
+    if (end >= beg)
+    {
+        int mid = beg + (end - beg) / 2;
+        if (a[mid] == ele)
+            return mid+1;
+        if (a[mid] > ele)
+            return binarysearch(beg, mid - 1);
+        return binarysearch(mid + 1, end);
+    }
+    return -1;
+}
+
+void search::sort()
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+
+            if (a[j] > a[j + 1])
+            {
+
+                int temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main()
+{
+    clock_t t,t1;
+    search s;
+    s.getdata();   
+    t = clock();
+    s.pos = s.linearsearch(0);
+    t = clock() - t;
+    double x1 = 1000000 * ((double)t) / CLOCKS_PER_SEC;
+    cout << "Time taken for linear search = " << x1 << " microseconds. " << endl;
+    s.display();
+    t1 = clock();
+    s.sort();
+    s.pos = s.binarysearch(0, s.n - 1);
+    t1 = clock() - t1;
+    double x2 = 1000000 * ((double)t1) / CLOCKS_PER_SEC;
+    cout << "Time taken for binary search = " << x2 << " microseconds" << endl;
+    s.display();
+    return 0;
+}
